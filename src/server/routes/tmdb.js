@@ -3,6 +3,7 @@ require('dotenv-safe').config();
 const express = require('express')
 const router = express.Router()
 const axios = require('axios')
+const cors = require('cors')
 
 router.use(express.json())
 router.use(express.urlencoded({extended: true}))
@@ -14,7 +15,11 @@ router.get('/trending', async (req,res)=>{
         let options = {
             method: 'GET',
             url: 'https://api.themoviedb.org/3/trending/all/day',
-            params: {api_key: process.env.TMDB_API_KEY},
+            params: {
+                api_key: process.env.TMDB_API_KEY,
+                language : 'pt-BR',
+                region : 'BR'
+            },
             headers: {
                 'Content-Type': 'application/json;charset=utf-8'
             }
@@ -24,6 +29,7 @@ router.get('/trending', async (req,res)=>{
         let response = await axios(options)
 
         if(response) return res.send(response.data)
+        
         res.sendStatus(404)
 
     }catch(err){
